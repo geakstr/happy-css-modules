@@ -1,6 +1,5 @@
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname } from 'path';
-import { isSystemError } from '../util.js';
 
 /**
  * Write a file if it doesn't exist or is changed.
@@ -14,7 +13,7 @@ export async function writeFileIfChanged(filePath: string, newContent: string): 
       await writeFile(filePath, newContent, 'utf8');
     }
   } catch (e) {
-    if (isSystemError(e) && e.code === 'ENOENT') {
+    if (e.code === 'ENOENT') {
       await mkdir(dirname(filePath), { recursive: true }); // if directory doesn't exist, create it
       await writeFile(filePath, newContent, 'utf8');
     } else {
